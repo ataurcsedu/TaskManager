@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Node.js Task List App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../style/cover.css" rel="stylesheet">
+<script type='text/javascript'>
+  // $('#getData').click(function(){
+  //   alert("hello");
+  //    $.get('http://localhost:3000/data', {}, function(data){
+  //         console.log(data)
+  //    });
+  // });
+  $(function(){
+
+    setInterval(_getOneData,2000);
+
+    $('#messageId').keypress(function (event) {
+            if (event.which == 13) {
+                $('#getData').click();
+            }
+        });
+  })
+var host = 'http://192.168.103.11:3000';
+function _sendData(){
+  $.post(host+'/post',$('#horizontalForm').serialize(),function(data){
+
+    var len = data.length;
+    for(var i = 0; i<len; i++){
+      var obj = data[i];
+      document.getElementById('responseDataId').innerHTML+=obj['NAME']+' : '+ obj['VALUE']+'<br>';
+      document.getElementById('responseDataId').scrollTop = document.getElementById('responseDataId').scrollHeight;
+    }
+
+    //console.log(data['dgd']);
+    windwo.location= host;
+  });
+
+}
+
+
+  function _getData(){
+    $.get(host+'/data', {}, function(data){
+         console.log(data);
+         //document.getElementById('some').innerHTML = data;
+        //  document.getElementById('responseDataId').scrollTop = document.getElementById('responseDataId').scrollHeight;
+         var rows = data.length;
+
+         for(var i=0;i<rows;i++){
+           var obj = data[i];
+           //console.log(obj['NAME']);
+           document.getElementById('responseDataId').innerHTML+=obj['NAME']+ ' : '+obj['VALUE']+'<br>'
+         }
+
+    });
+  }
+
+
+    function _getOneData(){
+      $.get(host+'/data1', {}, function(data){
+           console.log(data);
+           //document.getElementById('some').innerHTML = data;
+           document.getElementById('responseDataId').scrollTop = document.getElementById('responseDataId').scrollHeight;
+           var rows = data.length;
+           document.getElementById('responseDataId').innerHTML='';
+           for(var i=0;i<rows;i++){
+             var obj = data[i];
+             //console.log(obj['NAME']);
+             document.getElementById('responseDataId').innerHTML+=obj['NAME']+ ' : '+obj['VALUE']+'<br>'
+           }
+
+      });
+    }
+
+
+</script>
+  </head>
+
+  <body onload="_getData();">
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">Internal Chat system</h3>
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li class="active"><a href="#">Home</a></li>
+                  <li><a href="/showSignInPage">SignIn(in progress)</a></li>
+                  <li><a href="/showSignUpPage">SignUp (in progress)</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <div class="inner cover">
+            <h1 class="cover-heading">Messages</h1>
+            <p class="lead"></p>
+
+              <p id="responseDataId" style="height:20em; width:90em; text-align:left; overflow-y:scroll; border: 1px solid red;"></p>
+              <!-- <p id="responseDataId" style=""></p> -->
+
+
+
+            <!-- <p class="lead">
+              <a href="/showSignUpPage" class="btn btn-lg btn-default">Sign Up</a>
+            </p> -->
+            <form method="POST" action="/post" id="horizontalForm">
+              <p class="lead">
+                <select name="user" style="background-color:black;" id="userId">
+                  <option value='rizwan'>Rizwan</option>
+                  <option value='munna'>munna</option>
+                  <option value='tamim'>tamim</option>
+                  <option value='sajeeb'>sajeeb</option>
+                  <option value='alauddin'>alauddin</option>
+                  <option value='shibli'>shibli</option>
+                </select>
+                <!-- <input type="text" style="background-color:black;" name="user" value="" id="userId"></input> -->
+                <!--<input type="text" style="background-color:black;" name="message" id="messageId"/> -->
+				<div>
+				<textarea type="text" style="background-color:gray; width: 60em; height: 5em; resize:none;" name="message" id="messageId"></textarea>
+				<input type="button" value="Send" class="btn btn-lg btn-default" id="getData" onclick="_sendData();"/>
+				</div>
+              </p>
+            </form>
+            <p class="lead">
+              <input type="button" value="Send" class="btn btn-lg btn-default" id="getData" onclick="_sendData();"/>
+              <!-- <a href="#" class="btn btn-lg btn-default buttonClick" id="">Get Data</a> -->
+            </p>
+          </div>
+
+      </div>
+
+    </div>
+
+
+  </body>
+</html>
