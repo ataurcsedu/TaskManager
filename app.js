@@ -195,6 +195,7 @@ app.post('/create-user',function(req,res,next){
             userName:req.body.userName,
         },
         defaults:{
+            userName:req.body.userName,
             password:bcrypt.hashSync(req.body.password, passwordSalt),
             firstName:req.body.firstName,
             lastName:req.body.lastName,
@@ -203,7 +204,8 @@ app.post('/create-user',function(req,res,next){
             designation:req.body.designation
         }
         
-      }).spread((user, created)=>{
+      })
+      .spread((user, created)=>{
         console.log("$$$$$$$$$$$$$$"+created);
         if(created){
             var values = Object.assign({}, user.dataValues);
@@ -218,14 +220,14 @@ app.post('/create-user',function(req,res,next){
         }
         
       }).catch(Sequelize.ValidationError,function(err){
-          //console.log(JSON.parse(JSON.stringify(err['errors'])));
+          console.log(JSON.parse(JSON.stringify(err['errors'])));
           var result  =JSON.parse(JSON.stringify(err['errors']))
           var resp =[];
           resp.push(result[0].message);
           for(var e = 0; e<result.length;e++){
               //resp.push(result[0].message);
           }
-          res.json({message: resp, success: false});
+          res.json({message: result[0].message, success: false});
       }).catch(function(err){
         res.json({message: err, success: false});
       })

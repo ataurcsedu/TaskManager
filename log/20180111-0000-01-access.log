@@ -1,6 +1,0 @@
-192.168.103.18 - - [11/Jan/2018:06:12:33 +0000] "POST /token HTTP/1.1" 200 233 "-" "Dalvik/2.1.0 (Linux; U; Android 7.1.1; Android SDK built for x86 Build/NYC)"
-192.168.103.18 - - [11/Jan/2018:06:12:33 +0000] "POST /token HTTP/1.1" 200 233 "-" "Dalvik/2.1.0 (Linux; U; Android 7.1.1; Android SDK built for x86 Build/NYC)"
-192.168.103.18 - - [11/Jan/2018:06:12:33 +0000] "POST /token HTTP/1.1" 200 233 "-" "Dalvik/2.1.0 (Linux; U; Android 7.1.1; Android SDK built for x86 Build/NYC)"
-192.168.103.18 - - [11/Jan/2018:06:12:33 +0000] "POST /token HTTP/1.1" 200 233 "-" "Dalvik/2.1.0 (Linux; U; Android 7.1.1; Android SDK built for x86 Build/NYC)"
-192.168.103.18 - - [11/Jan/2018:06:12:36 +0000] "POST /token HTTP/1.1" 200 233 "-" "Dalvik/2.1.0 (Linux; U; Android 7.1.1; Android SDK built for x86 Build/NYC)"
-192.168.103.18 - - [11/Jan/2018:06:13:12 +0000] "POST /token HTTP/1.1" 200 233 "-" "Dalvik/2.1.0 (Linux; U; Android 7.1.1; Android SDK built for x86 Build/NYC)"

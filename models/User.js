@@ -1,7 +1,8 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('user', {
+  
+  var User =  sequelize.define('user', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -78,10 +79,12 @@ module.exports = function(sequelize, DataTypes) {
     status: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
-      defaultValue: '1',
+      defaultValue: 1,
       field: 'status'
     }
   }, {
     tableName: 'user'
   });
+
+  return User;
 };

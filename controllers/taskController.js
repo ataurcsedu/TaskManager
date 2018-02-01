@@ -16,9 +16,13 @@ const getAllTasks = (req, res) => {
     "INNER JOIN User c ON t.createdBy=c.id "+
     "WHERE ";
 
+    if(typeof reqBody.id!='undefined' && reqBody.id!=''){
+      query+="t.id = "+reqBody.id+" and ";
+    }
     if(typeof reqBody.title!='undefined' && reqBody.title!=''){
       query+="t.taskTitle LIKE "+"'%"+reqBody.title+"%'"+" and ";
     }
+
     if(typeof reqBody.description!='undefined' && reqBody.description!=''){
       query+="t.taskDescription LIKE "+"'%"+reqBody.description+"%'" +" and ";
     }
@@ -84,10 +88,10 @@ const getTaskById = (req, res) => {
     var query = "SELECT t.id,t.taskTitle as title,t.taskDescription as description,t.progress, "+
     "case t.status when 1 then 'ACTIVE' when 2 then 'INACTIVE' when 3 then 'IN PROGRESS' when 4 then 'COMPLETED' end as status, "+
     "DATE_FORMAT(t.creationDate,'%d-%m-%Y') as creationDate, DATE_FORMAT(t.updatedDate,'%d-%m-%Y') as assignedOn, "+
-    "a.userName as assignedBy ,b.userName as assigneeId, c.userName as createdBy FROM Tasks t "+
-    "INNER JOIN User a ON t.assignedBy=a.id "+
-    "INNER JOIN User b ON t.assigneeId=b.id "+
-    "INNER JOIN User c ON t.createdBy=c.id "+
+    "a.userName as assignedBy ,b.userName as assigneeId, c.userName as createdBy FROM tasks t "+
+    "INNER JOIN user a ON t.assignedBy=a.id "+
+    "INNER JOIN user b ON t.assigneeId=b.id "+
+    "INNER JOIN user c ON t.createdBy=c.id "+
     "WHERE t.id="+req.params.task_id;
 
     Sequelize.query(query,{ type: Sequelize.QueryTypes.SELECT})
@@ -129,7 +133,7 @@ const createTask = (req, res) => {
         }).spread((task,created)=>{
             if(created){
                 //res.json({success:true,data:task});
-                res.json({success:true,message:"Task Created Successfully."});
+                res.json({success:true,message:"Task Created Successfully.",id:task.id});
             }else{
                 res.json({success:false,message:"Task already created."});
             }
@@ -146,7 +150,6 @@ const updateTask = (req, res) => {
     const updateData ={};
     Tasks.findById(req.params.task_id)
       .then(function(task){
-          console.log(task);
           if(typeof req.body.title!='undefined' && req.body.title!=''){
             updateData.taskTitle = req.body.title
           }

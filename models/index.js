@@ -1,9 +1,11 @@
 var sequelize = require('../db/connection.js');
 
 var models = [                 
-  'Student',
   'User',
-  'Tasks'
+  'Tasks',
+  'Mac_address',
+  'Calendar',
+  'Usercalendar'
 ];
 
 models.forEach(function(model) {

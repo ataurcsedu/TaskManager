@@ -1,8 +1,10 @@
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const sequelize = new Sequelize('taskmanager', 'root', 'civs', {
-  host: '192.168.103.18',
+  host: 'localhost',
+  port:'3306',
   dialect: 'mysql',
+  timezone: '+06:00',
   define: {
         timestamps: false
     },
