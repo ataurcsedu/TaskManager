@@ -5,7 +5,8 @@ var models = [
   'Tasks',
   'Mac_address',
   'Calendar',
-  'Usercalendar'
+  'Usercalendar',
+  'Countcache'
 ];
 
 models.forEach(function(model) {

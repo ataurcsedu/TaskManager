@@ -32,23 +32,27 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       field: 'dates'
     },
-    times: {
+    checkinTimes: {
       type: DataTypes.TIME,
-      allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-      field: 'times'
+      allowNull: true,
+      field: 'checkin_times'
     },
-    checkIn: {
+    checkedStatus: {
       type: DataTypes.INTEGER(1),
       allowNull: false,
       defaultValue: '0',
-      field: 'check_in'
+      field: 'checked_status'
     },
-    checkOut: {
+    checkoutTime: {
+      type: DataTypes.TIME,
+      allowNull: true,
+      field: 'checkout_time'
+    },
+    checkoutStatus: {
       type: DataTypes.INTEGER(1),
       allowNull: false,
       defaultValue: '0',
-      field: 'check_out'
+      field: 'checkout_status'
     },
     status: {
       type: DataTypes.INTEGER(1),

@@ -6,8 +6,10 @@ var qs = require('querystring');
 var cheerio     = require('cheerio');
 var interceptor = require('express-interceptor');
 var connection = require('./db/connection.js');
+const dashboardController = require('./controllers/dashboardController.js');
 var Student = require('./models').Student;
 var User = require('./models').User;
+const Countcache = require('./models').Countcache;
 const routes = require('./routes');
 const errorTypes = require('./helpers/error-types');
 var bodyParser = require('body-parser')
@@ -16,6 +18,7 @@ var rfs = require('rotating-file-stream')
 var path = require('path')
 var morgan = require('morgan')
 const Sequelize = require('sequelize')
+var cron = require('node-cron');
 /** for authentication */
 const responseManager = require('./helpers/response-manager');
 const bcrypt = require('bcryptjs');
@@ -53,6 +56,11 @@ var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
 passport.use(strategy);
 
 
+
+cron.schedule('*/5 * * * *', function(){
+    console.log('Updating count table every five minutes...');
+    dashboardController.updateCount();
+});
 
 connection
   .authenticate()
@@ -119,13 +127,24 @@ app.use('/api/', routes);
 
 
 
-/*
 
-app.get('/',function(req,res){
 
-  res.sendFile('home.html',{'root': __dirname + '/templates'});
+app.get('/count',function(req,res){
+
+    Countcache.findAll({
+        where:{}
+      })
+    .then(function(result){
+        console.log(JSON.stringify(result))
+        res.json({success:true,message:JSON.stringify(result)})
+    })
+    .catch((err) => {return err})
+
+    //var result = dashboardController.getCount();
+    //console.log(result);
+    //res.json({success:true,message:result});
 })
-
+/*
 app.get('/showSignInPage',function(req,res){
     res.sendFile('signin.html',{'root': __dirname + '/templates'});
 })
@@ -147,16 +166,16 @@ app.use(morgan('combined', {stream: accessLogStream}))
 
 app.post('/token',function(req,res,next){
     //console.log(req.body);
-    //console.log(req.body.password);
+    console.log(req.body.deviceId);
     User.find({
-        where:{status:1,userName:req.body.userName}
+        where:{status:1,userName:req.body.userName,deviceId:req.body.deviceId}
       },
       { 
-        attributes: { exclude: ['password']}
+        attributes: { exclude: ['password','deviceId']}
       })
     .then((user) => {
         if (!user){
-            res.json({message: "Invalid user name", success:false});
+            res.json({message: "Invalid User Name or Device ID.", success:false});
         }else{
             if(bcrypt.compareSync(req.body.password, user.password)){
                 var payload = {userName: user.userName};
@@ -186,22 +205,24 @@ app.post('/token',function(req,res,next){
 
 
 
-
 app.post('/create-user',function(req,res,next){
     console.log("$$$$$$$$$$$$$$"+req.body.userName);
     
     User.findOrCreate({
         where:{
             userName:req.body.userName,
+            deviceId:req.body.deviceId
         },
         defaults:{
             userName:req.body.userName,
             password:bcrypt.hashSync(req.body.password, passwordSalt),
             firstName:req.body.firstName,
             lastName:req.body.lastName,
-            phone:req.body.phoneNumber,
+            phone:req.body.phone,
             email:req.body.email,
-            designation:req.body.designation
+            designation:req.body.designation,
+            deviceId:req.body.deviceId
+            
         }
         
       })
@@ -211,6 +232,7 @@ app.post('/create-user',function(req,res,next){
             var values = Object.assign({}, user.dataValues);
             //console.log(values);
             delete values.password;
+            delete values.deviceId;
             //console.log(values);
             //res.json({data:values, success: true});
             res.json({message:"User Created successfully.", success: true});
@@ -224,10 +246,12 @@ app.post('/create-user',function(req,res,next){
           var result  =JSON.parse(JSON.stringify(err['errors']))
           var resp =[];
           resp.push(result[0].message);
-          for(var e = 0; e<result.length;e++){
-              //resp.push(result[0].message);
+          if(result[0].path=='device_id'){
+            res.json({message: "Your device is already registered. Please contact with admin.", success: false});    
+          }else{
+            res.json({message: result[0].message, success: false});
           }
-          res.json({message: result[0].message, success: false});
+          
       }).catch(function(err){
         res.json({message: err, success: false});
       })

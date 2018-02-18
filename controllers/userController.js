@@ -16,8 +16,8 @@ const getAllUsers = (req, res) => {
         where:{status:'1'},
         attributes: { exclude: ['password']}
       })
-    .then((users) => responseManager.sendSuccess(res, successTypes.OK, users))
-    .catch((err) => responseManager.sendError(res, err))
+    .then((users) => res.json({success:true,message:users}))
+    .catch((err) => res.json({success:false,message:err}))
 }
 
 const getAllUsersWithId = (req, res) => {
@@ -40,7 +40,8 @@ const getUserById = (req, res) => {
 
 const getUserByUserName = (req, res) => {
   User.findAll({
-    where:{userName:req.params.user_name}
+    where:{userName:req.params.user_name},
+    attributes: { exclude: ['password','device_id']}
   })
   .then(function(users){
     res.json({message:users[0],success:true})

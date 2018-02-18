@@ -3,6 +3,7 @@ const authRoutes = require('./auth');
 const userRoutes = require('./user');
 const taskRoutes = require('./task');
 const macRoutes = require('./mac');
+const summaryRoutes = require('./summary');
 
 
 // Base Route for the Application (Can be deleted or comment out, if not needed)
@@ -15,6 +16,9 @@ router.use('/auth', authRoutes)
 router.use('/users', userRoutes);
 router.use('/task', taskRoutes);
 router.use('/mac', macRoutes);
+
+router.use('/summary', summaryRoutes);
+
 
 
 

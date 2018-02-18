@@ -76,6 +76,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'designation'
     },
+    deviceId: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      field: 'device_id'
+    },
     status: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
